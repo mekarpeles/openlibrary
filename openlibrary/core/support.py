@@ -101,7 +101,7 @@ class Case(Document):
         self.status = new_status
         self.store(self.db)
 
-    def reassign(self, new_assignee, by, text = ""):
+    def reassign(self, new_assignee, by, text=""):
         self.assignee = new_assignee
         entry = dict(by=by,
                      at=datetime.datetime.utcnow(),
@@ -118,10 +118,10 @@ class Case(Document):
         
     # Override base class members to hold the database connection
     @classmethod
-    def load(cls, db, id):
-        ret = super(Case, cls).load(db, id)
+    def load(cls, db, id_):
+        ret = super(Case, cls).load(db, id_)
         if not ret:
-            raise InvalidCase("No case with id %s"%id)
+            raise InvalidCase("No case with id %s"%id_)
         ret.db = db
         return ret
 
@@ -162,10 +162,10 @@ class Case(Document):
                 "subject": "cases/sort-subject",
                 "notes": "cases/sort-numnotes"}[sort]
         if sort == "status":
-            extra = dict(reduce=False,
-                         descending=desc)
+            extra = {'reduce': False,
+                     'descending': desc}
         else:
-            extra = dict(descending=desc)
+            extra = {'descending': desc}
         if staleok:
             extra['stale'] = "ok"
         if typ == "all":
