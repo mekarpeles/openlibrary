@@ -22,7 +22,7 @@ def get_admin_database():
         
 
 class Support(object):
-    def __init__(self, db = None):
+    def __init__(self, db=None):
         if db:
             self.db = db
         else:
@@ -33,18 +33,18 @@ class Support(object):
         seq = web.ctx.site.seq.next_value("support-case")
         created = datetime.datetime.utcnow()
         caseid = "case-%s"%seq
-        c = Case.new(_id = caseid,
-                     creator_name = creator_name,
-                     creator_email = creator_email,
-                     creator_useragent = creator_useragent,
-                     creator_username  = creator_username,
-                     subject = subject,
-                     description = description,
-                     assignee = assignee,
-                     created = created,
-                     status = "new",
-                     url = url,
-                     support_db = self.db)
+        c = Case.new(_id=caseid,
+                     creator_name=creator_name,
+                     creator_email=creator_email,
+                     creator_useragent=creator_useragent,
+                     creator_username=creator_username,
+                     subject=subject,
+                     description=description,
+                     assignee=assignee,
+                     created=created,
+                     status="new",
+                     url=url,
+                     support_db=self.db)
         c.store(self.db)
         return c
 
@@ -55,20 +55,20 @@ class Support(object):
         c = Case.load(self.db, caseid)
         return c
         
-    def get_all_cases(self, typ = "all", summarise = False, sortby = "lastmodified", user = False, desc = "false", staleok = False):
+    def get_all_cases(self, typ="all", summarise=False, sortby="lastmodified", user=False, desc="false", staleok=False):
         "Return all the cases in the system"
         args = {}
         if summarise:
             d = defaultdict(lambda: 0)
             if user:
-                args = dict(startkey = [user, "closed"], 
-                            endkey = [user, {}])
+                args = dict(startkey=[user, "closed"], 
+                            endkey=[user, {}])
             else:
-                args = dict(startkey = [None, "closed"], 
-                            endkey = [None,{}])
+                args = dict(startkey=[None, "closed"], 
+                            endkey=[None, {}])
             if staleok:
                 args.update(stale = "ok")
-            v = ViewDefinition("cases", "assignee", "", group_level = 2, **args)
+            v = ViewDefinition("cases", "assignee", "", group_level=2, **args)
             for i in v(self.db):
                 d[i.key[1]] += i.value
             return d
@@ -77,42 +77,42 @@ class Support(object):
             
             
 class Case(Document):
-    _id               = TextField()
-    type              = TextField(default = "case")
-    status            = TextField()
-    assignee          = TextField()
-    description       = TextField()
-    subject           = TextField()
-    creator_email     = TextField()
+    _id = TextField()
+    type = TextField(default = "case")
+    status = TextField()
+    assignee = TextField()
+    description = TextField()
+    subject = TextField()
+    creator_email = TextField()
     creator_useragent = TextField()
-    creator_name      = TextField()
-    creator_username  = TextField()
-    url               = TextField()
-    created           = DateTimeField()
-    history           = ListField(DictField(Mapping.build(at    = DateTimeField(),
-                                                          by    = TextField(),
-                                                          text  = TextField())))
+    creator_name = TextField()
+    creator_username = TextField()
+    url = TextField()
+    created = DateTimeField()
+    history = ListField(DictField(
+            Mapping.build(at=DateTimeField(),
+                          by= TextField(),
+                          text=TextField())))
 
     def __repr__(self):
-        return "<Case ('%s')>"%self._id
+        return "<Case ('%s')>" % self._id
 
     def change_status(self, new_status, by):
         self.status = new_status
         self.store(self.db)
 
-
     def reassign(self, new_assignee, by, text = ""):
         self.assignee = new_assignee
-        entry = dict(by = by,
-                     at = datetime.datetime.utcnow(),
-                     text = "Case reassigned to '%s'\n\n%s"%(new_assignee, text))
+        entry = dict(by=by,
+                     at=datetime.datetime.utcnow(),
+                     text="Case reassigned to '%s'\n\n%s"%(new_assignee, text))
         self.history.append(entry)
         self.store(self.db)
 
     def add_worklog_entry(self, by, text):
-        entry = dict(by = by,
-                     at = datetime.datetime.utcnow(),
-                     text = text)
+        entry = dict(by=by,
+                     at=datetime.datetime.utcnow(),
+                     text=text)
         self.history.append(entry)
         self.store(self.db)
         
@@ -145,32 +145,32 @@ class Case(Document):
     @classmethod
     def new(cls, **kargs):
         ret = cls(**kargs)
-        item = dict (at = ret.created,
-                     by = ret.creator_name or ret.creator_email,
-                     text = "Case created")
+        item = dict(at=ret.created,
+                    by=ret.creator_name or ret.creator_email,
+                    text="Case created")
         ret.history.append(item)
         return ret
 
     @classmethod
-    def all(cls, db, typ="all", sort = "status", desc = "false", staleok = False):
-        view = {"created"      : "cases/sort-created",
-                "caseid"       : "cases/sort-caseid",
-                "assigned"     : "cases/sort-assignee",
-                "user"         : "cases/sort-creator",
-                "lastmodified" : "cases/sort-lastmodified",
-                "status"       : "cases/sort-status",
-                "subject"      : "cases/sort-subject",
-                "notes"        : "cases/sort-numnotes"}[sort]
+    def all(cls, db, typ="all", sort="status", desc="false", staleok=False):
+        view = {"created": "cases/sort-created",
+                "caseid": "cases/sort-caseid",
+                "assigned": "cases/sort-assignee",
+                "user": "cases/sort-creator",
+                "lastmodified": "cases/sort-lastmodified",
+                "status": "cases/sort-status",
+                "subject": "cases/sort-subject",
+                "notes": "cases/sort-numnotes"}[sort]
         if sort == "status":
-            extra = dict(reduce = False,
-                         descending = desc)
+            extra = dict(reduce=False,
+                         descending=desc)
         else:
-            extra = dict(descending = desc)
+            extra = dict(descending=desc)
         if staleok:
             extra['stale'] = "ok"
         if typ == "all":
             view = view.replace("-","-all-") 
-            result = cls.view(db, view, include_docs = True, **extra)
+            result = cls.view(db, view, include_docs=True, **extra)
             return result.rows
         elif typ == "new":
             startkey, endkey = (["new"], ["replied"])
