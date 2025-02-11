@@ -9,8 +9,8 @@ body:
         > Before posting, remove sensitive data, such as passwords, secret keys, session cookies, etc.
 
   - type: textarea
-    label: Feature Request
     attributes:
+      label: Feature Request
       description: Provide a brief summary of the proposed feature and any details, designs, or screenshots that may be relevant.
       value: |
         ### Problem / Opportunity
