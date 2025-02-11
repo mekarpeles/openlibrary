@@ -14,21 +14,16 @@ body:
       description: Provide a brief summary of the proposed feature and any details, designs, or screenshots that may be relevant.
       value: |
         ### Problem / Opportunity
-        <!-- Describe: the problem this proposal addresses & for which audience(s) -->
+        <!-- Describe: What is the problem this proposal addresses & for which audience(s)? -->
 
-        <!-- Justify: the quantifiable impact of this problem or opportunity -->
+        <!-- Justify: Why should we work on this and what is the measurable impact? -->
 
-        <!-- Define Success: How will we know the problem is solved? -->
+        <!-- Define Success: How will we know when the problem is solved? -->
 
         ### Proposal
         <!-- Brief overview of your proposed solution -->
 
         <!-- Relevant designs, screenshots, or reference implementations that may help reviewers evaluate your proposal -->
-        
-        ### Related files
-        <!-- Add links to files relevant to the implementation of this proposal; useful for good first issues -->
-        Refer to [this map of common Endpoints](https://github.com/internetarchive/openlibrary/wiki/Endpoints):
-        *
     validations:
       required: true
 
@@ -37,6 +32,11 @@ body:
       label: Breakdown
       description: If you are unsure what to enter, please leave this section blank for leads/maintainers
       value: |
+        ### Related files
+        <!-- Add links to files relevant to the implementation of this proposal; useful for good first issues -->
+        Refer to [this map of common Endpoints](https://github.com/internetarchive/openlibrary/wiki/Endpoints):
+        *
+
         ### Requirements Checklist
         Checklist of requirements that need to be satisfied in order for this issue to be closed:
         * [ ]      
