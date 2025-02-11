@@ -11,7 +11,7 @@ body:
   - type: textarea
     attributes:
       label: Feature Request
-      description: Provide a brief summary of the proposed feature and any details, designs, or screenshots that may be relevant:
+      description: Provide a brief summary of the proposed feature and any details, designs, or screenshots that may be relevant.
       value: |
         ### Problem / Opportunity
         <!-- Describe: the problem this proposal addresses & for which audience(s) -->
